@@ -13,6 +13,8 @@ namespace LemonadeStand
         private Weather weather;
         private List<Customer> customerList;
         private double dailySales;
+        private double dailyExpense;
+        private double dailyProfit;
 
         //constructors
         public Game()
@@ -28,23 +30,34 @@ namespace LemonadeStand
             {
                 weather.GetActualWeather(i);
                 player.DisplayInventory();
+                player.DisplayBalance();
                 player.AddNewInventory();
+                player.MakeBatch();
+                GetExpense();
                 player.GetPrice();
 
                 GetCustomerList(i);
                 GetSales();
+                DisplayExpense();
+                DisplayProfit();
+
             }
         }
         private void GetSales()
         {
             dailySales = 0;
             int i = 0;
-            while(player.CheckStock() == true && i < customerList.Count)
+            while(player.supply > 0 && i < customerList.Count)
             {
                 if (customerList[i].maxPrice >= player.price)
                 {
                     dailySales = dailySales + player.price;
-                    player.UpdateStock();               
+                    player.supply = player.supply - 1;
+                    if (customerList[i].thirst == 2)
+                    {
+                        dailySales = dailySales + player.price;
+                        player.supply = player.supply - 1;
+                    }               
                 }
                 i++;
             }
@@ -61,6 +74,28 @@ namespace LemonadeStand
             {
                 customerList.Add(new Customer(number, baseDemand));
             }
+        }
+
+        private void GetExpense()
+        {
+            dailyExpense = player.supply * player.unitCost;
+        }
+
+        private void DisplayExpense()
+        {
+            string display = string.Format("{0:N2}", Math.Round(dailyExpense * 100) / 100);
+            Console.WriteLine("-----Expense-----");
+            Console.WriteLine($" ${dailyExpense}");
+            Console.WriteLine();
+        }
+
+        private void DisplayProfit()
+        {
+            dailyProfit = dailySales - dailyExpense;
+            string display = string.Format("{0:N2}", Math.Round(dailyProfit * 100) / 100);
+            Console.WriteLine("-----Profit-----");
+            Console.WriteLine($" ${dailyProfit}");
+            Console.WriteLine();
         }
     }
 }

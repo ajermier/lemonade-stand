@@ -102,6 +102,9 @@ namespace LemonadeStand
                 Console.WriteLine($"Day {i + 1}: high of {tempForecast[i]} with a {precipForecast[i]} chance of rain.");
             }
             Console.WriteLine();
+            Console.WriteLine("Press enter to get started");
+            Console.WriteLine();
+            Console.ReadLine();
         }
 
         public void GetActualWeather(int i)

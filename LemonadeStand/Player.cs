@@ -9,12 +9,14 @@ namespace LemonadeStand
     class Player
     {
         //member variables
-        private int supply;
+        public int supply;
         public double price;
         private double balance;
-        public string name;
+        //public string name;
         Lemons lemons;
         Sugar sugar;
+        Inventory batch;
+        public double unitCost;
 
         //constructors
         public Player()
@@ -22,6 +24,8 @@ namespace LemonadeStand
             balance = 20;
             lemons = new Lemons();
             sugar = new Sugar();
+            batch = new Inventory();
+            unitCost = (lemons.unitProportion / lemons.totalServingProportion) + (sugar.unitProportion / sugar.totalServingProportion);
             PromptForRecipe();
             supply = 0;
             AddNewInventory();
@@ -90,7 +94,17 @@ namespace LemonadeStand
             }
             Debit(sugar.quantity, sugar.unitPrice);
         }
+        public void MakeBatch()
+        {
+            while (lemons.stock > 0 && sugar.stock > 0)
+            {
+                UpdateStock();
+                supply = supply + 1;
+            }
 
+            Console.WriteLine($"You have made enough to sell {supply} glasses of lemonade.");
+            Console.WriteLine();
+        }
         public void GetPrice()
         {
             Console.Write("What price (per glass) do you want to sell your lemonade for today? $");
@@ -141,13 +155,19 @@ namespace LemonadeStand
         private void Debit(int quantity, double unitPrice)
         {
             balance = balance - (unitPrice * quantity);
-            Console.WriteLine("Cash balance = {0}", balance);
         }
 
         public void Credit(double amount)
         {
             balance = balance + amount;
-            Console.WriteLine("Cash balance = {0}", balance);
+        }
+
+        public void DisplayBalance()
+        {
+            string display = string.Format("{0:N2}", Math.Round(balance * 100) / 100);
+            Console.WriteLine("-----balance-----");
+            Console.WriteLine($" ${display}");
+            Console.WriteLine();
         }
 
         public void DisplayInventory()
@@ -155,6 +175,7 @@ namespace LemonadeStand
             Console.WriteLine("-----Inventory-----");
             Console.WriteLine($"Lemons: {lemons.stock} lemons");
             Console.WriteLine($"Sugar: {sugar.stock} cups of sugar");
+            Console.WriteLine();
         }
 
     }
