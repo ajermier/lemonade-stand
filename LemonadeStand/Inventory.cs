@@ -10,6 +10,7 @@ namespace LemonadeStand
     {
         //member variables
         public int quantity;
+        private double stock;
         public double unitPrice;
 
         //constructors
@@ -25,16 +26,15 @@ namespace LemonadeStand
             return quantity;
         }
 
-        public int AddToInventory()
+        public void AddToInventory()
         {
-            quantity = quantity + AddNewInventory();
-
-            return quantity;
+            stock = stock + AddNewInventory();
 
         }
 
         public virtual void RemoveInventory(double amount)
         {
+            stock = stock - amount;
         }
     }
 }

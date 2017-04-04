@@ -11,7 +11,7 @@ namespace LemonadeStand
         public Lemons()
         {
             unitPrice = 0.25;
-            quantity = AddNewInventory();
+            quantity = 0;
         }
 
         public override int AddNewInventory()
