@@ -10,31 +10,27 @@ namespace LemonadeStand
     {
         //member variables
         public int quantity;
-        private double stock;
+        public double stock;
         public double unitPrice;
+        public double totalServingProportion;
 
         //constructors
         public Inventory()
         {
+            totalServingProportion = 4;
         }
 
         //methods
-        public virtual int AddNewInventory()
+        public virtual void AddNewInventory()
         {
             Console.WriteLine("Enter amount to add: ");
             int.TryParse(Console.ReadLine(), out quantity);
-            return quantity;
+            stock = stock + quantity;
         }
 
-        public void AddToInventory()
+        public virtual void RemoveInventory()
         {
-            stock = stock + AddNewInventory();
-
-        }
-
-        public virtual void RemoveInventory(double amount)
-        {
-            stock = stock - amount;
+            stock = stock - 1;
         }
     }
 }

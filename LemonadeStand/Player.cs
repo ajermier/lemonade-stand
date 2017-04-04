@@ -22,12 +22,58 @@ namespace LemonadeStand
             balance = 20;
             lemons = new Lemons();
             sugar = new Sugar();
+            PromptForRecipe();
             supply = 0;
             AddNewInventory();
             //name = getName();
         }
 
         //methods
+        public void PromptForRecipe()
+        {
+            Console.WriteLine("----------Recipe----------");
+            Console.WriteLine("You can change your recipe if you want. The default is:");
+            Console.WriteLine("  <>2 parts lemon juice");
+            Console.WriteLine("  <>1 part sugar");
+            Console.WriteLine("  <>5 parts water");
+            Console.WriteLine("Because lemonade stands are highly regulated for water ");
+            Console.WriteLine("content you can only adjust the ratio of lemon juice to ");
+            Console.WriteLine("sugar (2:1 by default).");
+            Console.WriteLine();
+            Console.Write("Do you want to change from the tried and true default recipe? (y or n): ");
+            ReadAnswerYN();
+        }
+
+        public void ReadAnswerYN()
+        {
+            switch (Console.ReadLine())
+            {
+                case "y":
+                    GetNewRecipe();
+                    Console.WriteLine();
+                    break;
+                case "n":
+                    break;
+                default:
+                    Console.WriteLine("Error: Please enter 'y' or 'n'.");
+                    ReadAnswerYN();
+                    break;
+            }
+        }
+
+        public void GetNewRecipe()
+        {
+            Console.WriteLine("Total parts must equal 1.5:");
+            Console.Write("How many parts sugar (default 0.5)? ");
+            double.TryParse(Console.ReadLine(), out sugar.unitProportion);
+            Console.Write("How many parts lemon (default 1.0)? ");
+            double.TryParse(Console.ReadLine(), out lemons.unitProportion);
+
+            if (sugar.unitProportion + lemons.unitProportion > 2)
+            {
+                GetNewRecipe();
+            }
+        }
         public void AddNewInventory()
         {
             lemons.AddNewInventory();
@@ -61,19 +107,23 @@ namespace LemonadeStand
             }
         }
 
-        public void CalculateSupply(Lemons lemons, Sugar sugar)
+        public bool CheckStock()
         {
-            double lemonsCount = lemons.quantity;
-            double sugarCount = sugar.quantity;
-
-            while (lemonsCount > 0 && sugarCount > 0)
+            if(lemons.stock > 0 && sugar.stock > 0)
             {
-                supply = supply + 1;
-                lemonsCount = lemonsCount - (1.0/3);
-                sugarCount = sugarCount - (1.0/6);
+                return true;
             }
+            else
+            {
+                Console.WriteLine("Your ran out of supplies before the end of the day.");
+                return false;
+            }
+        }
 
-            Console.WriteLine("You have enough ingredients for {0} cups of lemonade.", supply);
+        public void UpdateStock()
+        {
+            lemons.RemoveInventory();
+            sugar.RemoveInventory();
         }
 
         private bool CheckFundsAvail(int quantity, double unitPrice)
@@ -94,7 +144,7 @@ namespace LemonadeStand
             Console.WriteLine("Cash balance = {0}", balance);
         }
 
-        private void Credit(double amount)
+        public void Credit(double amount)
         {
             balance = balance + amount;
             Console.WriteLine("Cash balance = {0}", balance);
@@ -103,8 +153,8 @@ namespace LemonadeStand
         public void DisplayInventory()
         {
             Console.WriteLine("-----Inventory-----");
-            Console.WriteLine($"Lemons: {lemons.quantity} lemons");
-            Console.WriteLine($"Sugar: {sugar.quantity} cups of sugar");
+            Console.WriteLine($"Lemons: {lemons.stock} lemons");
+            Console.WriteLine($"Sugar: {sugar.stock} cups of sugar");
         }
 
     }

@@ -99,8 +99,9 @@ namespace LemonadeStand
             {
                 GetTemperature(number, i);
                 GetChancePrecip(number, i);
-                Console.WriteLine($"Day {i + 1}: high of {tempForecast[i]} with a {precipForecast[i]} of rain.");
+                Console.WriteLine($"Day {i + 1}: high of {tempForecast[i]} with a {precipForecast[i]} chance of rain.");
             }
+            Console.WriteLine();
         }
 
         public void GetActualWeather(int i)

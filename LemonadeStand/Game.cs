@@ -17,10 +17,8 @@ namespace LemonadeStand
         //constructors
         public Game()
         {
-            weather = new Weather();
             player = new Player();
-
-
+            weather = new Weather();
         }
 
         //methods
@@ -34,31 +32,31 @@ namespace LemonadeStand
                 player.GetPrice();
 
                 GetCustomerList(i);
-
                 GetSales();
-
-                Console.WriteLine($"You made {dailySales} today!");
-
-                Console.WriteLine();
             }
-
         }
         private void GetSales()
         {
             dailySales = 0;
-            for(int i = 0; i < customerList.Count; i++)
+            int i = 0;
+            while(player.CheckStock() == true && i < customerList.Count)
             {
                 if (customerList[i].maxPrice >= player.price)
                 {
                     dailySales = dailySales + player.price;
+                    player.UpdateStock();               
                 }
+                i++;
             }
+            Console.WriteLine($"You made ${dailySales} today!");
+            player.Credit(dailySales);
         }
         private void GetCustomerList(int day)
         {
             customerList = new List<Customer>();
             Random number = new Random();
             int baseDemand = weather.CalculateBaseDemand(day);
+
             for (int i = 0; i < baseDemand; i++)
             {
                 customerList.Add(new Customer(number, baseDemand));
