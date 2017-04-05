@@ -10,6 +10,7 @@ namespace LemonadeStand
     {
         //member variables
         public double unitProportion;
+        public static double unitPrice;
 
         //constructors
         public Sugar()
@@ -23,14 +24,24 @@ namespace LemonadeStand
         //methods
         public override void AddNewInventory()
         {
-            Console.WriteLine("Enter amount of sugar (in cups) to purchase: ");
+            string price = string.Format("{0:N2}", Math.Round(Sugar.unitPrice * 100) / 100);
+            Console.WriteLine($"Sugar costs ${price} per cup.");
+            Console.Write("Enter amount of sugar (in cups) to purchase: ");
             int.TryParse(Console.ReadLine(), out quantity);
             stock = stock + quantity;
+            Console.WriteLine();
         }
 
         public override void RemoveInventory()
         {
             stock = stock - (unitProportion / totalServingProportion);
+            if (stock < unitProportion / totalServingProportion) stock = 0;
+        }
+        public double GetUnitCost()
+        {
+            double unitCost = (unitProportion/totalServingProportion) * unitPrice;
+
+            return unitCost;
         }
     }
 }

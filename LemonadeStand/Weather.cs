@@ -124,6 +124,7 @@ namespace LemonadeStand
                 Console.WriteLine($"...seems like the forecast was a litte off for today.");
             }
             Console.WriteLine($"Today is a high of {tempForecast[i]} with a {precipForecast[i]} of rain.");
+            Console.WriteLine();
         }
 
         public int CalculateBaseDemand(int i)

@@ -9,101 +9,42 @@ namespace LemonadeStand
     class Player
     {
         //member variables
-        public int supply;
         public double price;
         private double balance;
+        private Recipe recipe;
         //public string name;
-        Lemons lemons;
-        Sugar sugar;
-        Inventory batch;
-        public double unitCost;
+        public Inventory inventory;
+        private double unitCost;
+        public double Balance { get { return balance; } set { value = balance; } }
 
         //constructors
         public Player()
         {
+            recipe = new Recipe();
             balance = 20;
-            lemons = new Lemons();
-            sugar = new Sugar();
-            batch = new Inventory();
-            unitCost = (lemons.unitProportion / lemons.totalServingProportion) + (sugar.unitProportion / sugar.totalServingProportion);
-            PromptForRecipe();
-            supply = 0;
-            AddNewInventory();
+            inventory = new Inventory();
+            inventory.AddInitialInventory();
             //name = getName();
         }
 
         //methods
-        public void PromptForRecipe()
+        public void GetIngredients()
         {
-            Console.WriteLine("----------Recipe----------");
-            Console.WriteLine("You can change your recipe if you want. The default is:");
-            Console.WriteLine("  <>2 parts lemon juice");
-            Console.WriteLine("  <>1 part sugar");
-            Console.WriteLine("  <>5 parts water");
-            Console.WriteLine("Because lemonade stands are highly regulated for water ");
-            Console.WriteLine("content you can only adjust the ratio of lemon juice to ");
-            Console.WriteLine("sugar (2:1 by default).");
-            Console.WriteLine();
-            Console.Write("Do you want to change from the tried and true default recipe? (y or n): ");
-            ReadAnswerYN();
-        }
-
-        public void ReadAnswerYN()
-        {
-            switch (Console.ReadLine())
             {
-                case "y":
-                    GetNewRecipe();
-                    Console.WriteLine();
-                    break;
-                case "n":
-                    break;
-                default:
-                    Console.WriteLine("Error: Please enter 'y' or 'n'.");
-                    ReadAnswerYN();
-                    break;
-            }
-        }
+                inventory.lemons.AddNewInventory();
+                while (CheckFundsAvail(inventory.lemons.quantity, Lemons.unitPrice) == false)
+                {
+                    inventory.lemons.AddNewInventory();
+                }
+                Debit(inventory.lemons.quantity, Lemons.unitPrice);
 
-        public void GetNewRecipe()
-        {
-            Console.WriteLine("Total parts must equal 1.5:");
-            Console.Write("How many parts sugar (default 0.5)? ");
-            double.TryParse(Console.ReadLine(), out sugar.unitProportion);
-            Console.Write("How many parts lemon (default 1.0)? ");
-            double.TryParse(Console.ReadLine(), out lemons.unitProportion);
-
-            if (sugar.unitProportion + lemons.unitProportion > 2)
-            {
-                GetNewRecipe();
+                inventory.sugar.AddNewInventory();
+                while (CheckFundsAvail(inventory.sugar.quantity, Sugar.unitPrice) == false)
+                {
+                    inventory.sugar.AddNewInventory();
+                }
+                Debit(inventory.sugar.quantity, Sugar.unitPrice);
             }
-        }
-        public void AddNewInventory()
-        {
-            lemons.AddNewInventory();
-            while (CheckFundsAvail(lemons.quantity, lemons.unitPrice) == false)
-            {
-                lemons.AddNewInventory();
-            }
-            Debit(lemons.quantity, lemons.unitPrice);
-
-            sugar.AddNewInventory();
-            while (CheckFundsAvail(sugar.quantity, sugar.unitPrice) == false)
-            {
-                sugar.AddNewInventory();
-            }
-            Debit(sugar.quantity, sugar.unitPrice);
-        }
-        public void MakeBatch()
-        {
-            while (lemons.stock > 0 && sugar.stock > 0)
-            {
-                UpdateStock();
-                supply = supply + 1;
-            }
-
-            Console.WriteLine($"You have made enough to sell {supply} glasses of lemonade.");
-            Console.WriteLine();
         }
         public void GetPrice()
         {
@@ -119,28 +60,18 @@ namespace LemonadeStand
                 Console.WriteLine("Your price must be over $0.50, otherwise you won't make any money.");
                 GetPrice();
             }
+            Console.WriteLine();
         }
-
-        public bool CheckStock()
+        public double GetUnitCost()
         {
-            if(lemons.stock > 0 && sugar.stock > 0)
-            {
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Your ran out of supplies before the end of the day.");
-                return false;
-            }
-        }
+            double lemonsUnitCost = inventory.lemons.GetUnitCost();
+            double sugarUnitCost = inventory.sugar.GetUnitCost();
 
-        public void UpdateStock()
-        {
-            lemons.RemoveInventory();
-            sugar.RemoveInventory();
-        }
+            unitCost = lemonsUnitCost + sugarUnitCost;
 
-        private bool CheckFundsAvail(int quantity, double unitPrice)
+            return unitCost;
+        }
+        public bool CheckFundsAvail(int quantity, double unitPrice)
         {
             double total = unitPrice * quantity;
 
@@ -151,7 +82,6 @@ namespace LemonadeStand
             }
             else return true;
         }
-
         private void Debit(int quantity, double unitPrice)
         {
             balance = balance - (unitPrice * quantity);
@@ -169,14 +99,5 @@ namespace LemonadeStand
             Console.WriteLine($" ${display}");
             Console.WriteLine();
         }
-
-        public void DisplayInventory()
-        {
-            Console.WriteLine("-----Inventory-----");
-            Console.WriteLine($"Lemons: {lemons.stock} lemons");
-            Console.WriteLine($"Sugar: {sugar.stock} cups of sugar");
-            Console.WriteLine();
-        }
-
     }
 }

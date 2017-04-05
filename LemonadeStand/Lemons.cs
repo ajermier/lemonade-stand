@@ -10,6 +10,7 @@ namespace LemonadeStand
     {
         //member variables
         public double unitProportion;
+        public static double unitPrice;
 
         //constructors
         public Lemons()
@@ -23,15 +24,24 @@ namespace LemonadeStand
         //methods
         public override void AddNewInventory()
         {
-            Console.WriteLine("Enter amount of lemons to purchase: ");
+            string price = string.Format("{0:N2}", Math.Round(Lemons.unitPrice * 100) / 100);
+            Console.WriteLine($"Lemons cost ${price} per lemon.");
+            Console.Write("Enter amount of lemons to purchase: ");
             int.TryParse(Console.ReadLine(), out quantity);
             stock = stock + quantity;
+            Console.WriteLine();
         }
 
         public override void RemoveInventory()
         {
-            double lemonsPerCup = 3;
-            stock = stock - (unitProportion/totalServingProportion)*lemonsPerCup;
+            stock = stock - unitProportion;
+        }
+
+        public double GetUnitCost()
+        {
+            double unitCost = unitProportion * unitPrice;
+
+            return unitCost;
         }
     }
 }
