@@ -11,105 +11,66 @@ namespace LemonadeStand
         //member variables  
         private Player player;
         private Weather weather;
-        private List<Customer> customerList;
-        private double dailySales;
-        private double dailyExpense;
-        private double dailyProfit;
-        private int cupCount;
+        private Day day;
+
+        private double totalProfit;
 
         //constructors
         public Game()
         {
+            UserInterface.GetBeginGame();
             player = new Player();
-            weather = new Weather();
+            GetWeek();
         }
 
         //methods
-        public void GetDay()
-        {            
-            for (int i = 0; i <7; i++)
-            {
-                weather.GetActualWeather(i);
-                player.inventory.DisplayInventory();
-                player.DisplayBalance();
-                player.GetIngredients();
-                player.inventory.MakeBatch();
-                GetExpense();
-                Console.WriteLine($"It costs {player.GetUnitCost()} to make one cup" );
-                player.GetPrice();
-
-                GetCustomerList(i);
-                GetSales();
-                DisplaySales();
-                DisplayExpense();
-                DisplayProfit();
-                player.Credit(dailyProfit);
-            }
-        }
-        private void GetSales()
+        public void GetWeek()
         {
-            dailySales = 0;
-            cupCount = 0;
-            int i = 0;
-            while(player.inventory.CheckSupply() == true && i < customerList.Count)
+            weather = new Weather();
+
+            int i = 0;         
+            while (CheckForLoser(player)==false && i < 7)
             {
-                if (customerList[i].maxPrice >= player.price)
-                {
-                    dailySales = dailySales + player.price;
-                    player.inventory.supply = player.inventory.supply - 1;
-                    cupCount++;
-                    if (customerList[i].thirst == 2)
-                    {
-                        dailySales = dailySales + player.price;
-                        player.inventory.supply = player.inventory.supply - 1;
-                        cupCount++;
-                    }               
-                }
+                day = new Day(player, weather, i);
                 i++;
+                totalProfit = totalProfit + day.DailyProfit;
             }
+            UserInterface.GetEndGame(totalProfit);
+            RestartQuitGame();
         }
-        private void GetCustomerList(int day)
+        private bool CheckForLoser(Player player)
         {
-            customerList = new List<Customer>();
-            Random number = new Random();
-            int baseDemand = weather.CalculateBaseDemand(day);
-
-            for (int i = 0; i < baseDemand; i++)
+            if (player.Balance <= 5)
             {
-                customerList.Add(new Customer(number, baseDemand));
+                Console.WriteLine("You ran out of money, better luck next time.");
+                Console.WriteLine();
+                return true;
             }
+            else return false;
         }
+        private void RestartQuitGame()
+        {
+            Console.WriteLine("What do you want to do?");
+            Console.WriteLine(" 1- continue playing into another week");
+            Console.WriteLine(" 2- start over");
+            Console.WriteLine(" 3- quit");
+            string answer = Console.ReadLine();
 
-        private void GetExpense()
-        {
-            dailyExpense = player.inventory.supply * player.GetUnitCost();
-        }
-        private void DisplaySales()
-        {
-            string price = string.Format("{0:N2}", Math.Round(player.price * 100) / 100);
-            Console.WriteLine($"You sold {cupCount} cups today at a price of ${price} each.");
-            Console.WriteLine();
-            string sales = string.Format("{0:N2}", Math.Round(dailySales * 100) / 100);
-            Console.WriteLine("-----Sales-----");
-            Console.WriteLine($" ${sales}");
-            Console.WriteLine();
-        }
-
-        private void DisplayExpense()
-        {
-            string expense = string.Format("{0:N2}", Math.Round(dailyExpense * 100) / 100);
-            Console.WriteLine("-----Expense-----");
-            Console.WriteLine($" ${expense}");
-            Console.WriteLine();
-        }
-
-        private void DisplayProfit()
-        {
-            dailyProfit = dailySales - dailyExpense;
-            string profit = string.Format("{0:N2}", Math.Round(dailyProfit * 100) / 100);
-            Console.WriteLine("-----Profit-----");
-            Console.WriteLine($" ${profit}");
-            Console.WriteLine();
+            switch (answer)
+            {
+                case "1":
+                    GetWeek();
+                    break;
+                case "2":
+                    Console.Clear();
+                    Game game = new Game();
+                    break;
+                case "3":
+                    break;
+                default:
+                    Console.WriteLine("Enter '1', '2', or '3'.");
+                    break;                    
+            }
         }
     }
 }

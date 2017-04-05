@@ -15,6 +15,7 @@ namespace LemonadeStand
         public int supply;
         public Lemons lemons;
         public Sugar sugar;
+        public Cups cups;
 
         //constructors
         public Inventory()
@@ -23,16 +24,15 @@ namespace LemonadeStand
         }
 
         //methods
-        public virtual void AddNewInventory()
+        public virtual void AddNewInventory(int quantity)
         {
-            Console.WriteLine("Enter amount to add: ");
-            int.TryParse(Console.ReadLine(), out quantity);
             stock = stock + quantity;
         }
         public void AddInitialInventory()
         {
             lemons = new Lemons();
             sugar = new Sugar();
+            cups = new Cups();
         }
         public bool CheckSupply()
         {
@@ -51,6 +51,7 @@ namespace LemonadeStand
         {
             lemons.RemoveInventory();
             sugar.RemoveInventory();
+            cups.RemoveInventory();
         }
 
         public virtual void RemoveInventory()
@@ -59,7 +60,7 @@ namespace LemonadeStand
         }
         public void MakeBatch()
         {
-            while (lemons.stock > 0 && sugar.stock > 0)
+            while (lemons.stock >= lemons.unitProportion && sugar.stock >= sugar.unitProportion && cups.stock >= cups.unitProportion )
             {
                 supply = supply + 1;
                 UpdateStock();
@@ -70,9 +71,12 @@ namespace LemonadeStand
         }
         public void DisplayInventory()
         {
+            string lem = string.Format("{0:N1}", Math.Round(lemons.stock * 100) / 100);
+            string sug = string.Format("{0:N1}", Math.Round(sugar.stock * 100) / 100);
             Console.WriteLine("-----Inventory-----");
-            Console.WriteLine($"Lemons: {lemons.stock} lemons");
-            Console.WriteLine($"Sugar: {sugar.stock} cups of sugar");
+            Console.WriteLine($"Lemons: {lem}");
+            Console.WriteLine($"Sugar: {sug} cups");
+            Console.WriteLine($"Cups: {cups.stock}");
             Console.WriteLine();
         }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Lemons : Inventory
+    class Cups : Inventory
     {
         //member variables
         public double unitProportion;
@@ -14,10 +14,10 @@ namespace LemonadeStand
         public int buyAmount;
 
         //constructors
-        public Lemons()
+        public Cups()
         {
-            unitPrice = 0.25;
-            unitProportion = 1.00;
+            unitPrice = 0.07;
+            unitProportion = 1;
             quantity = 0;
             stock = 0;
         }
@@ -25,26 +25,18 @@ namespace LemonadeStand
         //methods
         public int Buy()
         {
-            string price = string.Format("{0:N2}", Math.Round(Lemons.unitPrice * 100) / 100);
-            Console.WriteLine($"Lemons cost ${price} per lemon.");
-            Console.Write("Enter amount of lemons to purchase: ");
+            string price = string.Format("{0:N2}", Math.Round(Cups.unitPrice * 100) / 100);
+            Console.WriteLine($"Cups cost ${price} per cup.");
+            Console.Write("Enter amount of cups to purchase: ");
             int.TryParse(Console.ReadLine(), out buyAmount);
             Console.WriteLine();
-
             return buyAmount;
         }
-
-        public override void RemoveInventory()
-        {
-            stock = stock - unitProportion;
-        }
-
         public double GetUnitCost()
         {
-            double unitCost = unitProportion * unitPrice;
+            double unitCost = (unitProportion) * unitPrice;
 
             return unitCost;
         }
     }
 }
-

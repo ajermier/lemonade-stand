@@ -11,40 +11,39 @@ namespace LemonadeStand
         //member variables
         public double price;
         private double balance;
-        private Recipe recipe;
         //public string name;
         public Inventory inventory;
+        public Recipe recipe;
         private double unitCost;
         public double Balance { get { return balance; } set { value = balance; } }
 
         //constructors
         public Player()
         {
-            recipe = new Recipe();
             balance = 20;
             inventory = new Inventory();
             inventory.AddInitialInventory();
+            recipe = new Recipe(inventory);
+
             //name = getName();
         }
 
         //methods
         public void GetIngredients()
         {
-            {
-                inventory.lemons.AddNewInventory();
-                while (CheckFundsAvail(inventory.lemons.quantity, Lemons.unitPrice) == false)
-                {
-                    inventory.lemons.AddNewInventory();
-                }
-                Debit(inventory.lemons.quantity, Lemons.unitPrice);
-
-                inventory.sugar.AddNewInventory();
-                while (CheckFundsAvail(inventory.sugar.quantity, Sugar.unitPrice) == false)
-                {
-                    inventory.sugar.AddNewInventory();
-                }
-                Debit(inventory.sugar.quantity, Sugar.unitPrice);
-            }
+            DisplayBalance();
+            while (!CheckFundsAvail(inventory.lemons.Buy(), Lemons.unitPrice));
+            inventory.lemons.AddNewInventory(inventory.lemons.buyAmount);
+            Debit(inventory.lemons.buyAmount, Lemons.unitPrice);
+            DisplayBalance();
+            while (!CheckFundsAvail(inventory.sugar.Buy(), Sugar.unitPrice));
+            inventory.sugar.AddNewInventory(inventory.sugar.buyAmount);
+            Debit(inventory.sugar.buyAmount, Sugar.unitPrice);
+            DisplayBalance();
+            while (!CheckFundsAvail(inventory.cups.Buy(), Cups.unitPrice));
+            inventory.cups.AddNewInventory(inventory.cups.buyAmount);
+            Debit(inventory.cups.buyAmount, Cups.unitPrice);
+            Console.WriteLine();
         }
         public void GetPrice()
         {
@@ -55,9 +54,10 @@ namespace LemonadeStand
                 Console.WriteLine("Are you nuts? Nobody will buy lemonade for that much! Lower your price.");
                 GetPrice();
             }
-            else if(price < 0.50)
+            else if(price < GetUnitCost())
             {
-                Console.WriteLine("Your price must be over $0.50, otherwise you won't make any money.");
+                string unit = string.Format("{0:N2}", Math.Round(GetUnitCost() * 100) / 100);
+                Console.WriteLine($"Your price must be above ${unit}, otherwise you won't make any money.");
                 GetPrice();
             }
             Console.WriteLine();
@@ -66,8 +66,9 @@ namespace LemonadeStand
         {
             double lemonsUnitCost = inventory.lemons.GetUnitCost();
             double sugarUnitCost = inventory.sugar.GetUnitCost();
+            double cupUnitCost = inventory.cups.GetUnitCost();
 
-            unitCost = lemonsUnitCost + sugarUnitCost;
+            unitCost = lemonsUnitCost + sugarUnitCost + cupUnitCost;
 
             return unitCost;
         }
@@ -94,9 +95,9 @@ namespace LemonadeStand
 
         public void DisplayBalance()
         {
-            string display = string.Format("{0:N2}", Math.Round(balance * 100) / 100);
+            string bal = string.Format("{0:N2}", Math.Round(balance * 100) / 100);
             Console.WriteLine("-----balance-----");
-            Console.WriteLine($" ${display}");
+            Console.WriteLine($" ${bal}");
             Console.WriteLine();
         }
     }

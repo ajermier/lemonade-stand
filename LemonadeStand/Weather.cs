@@ -84,7 +84,7 @@ namespace LemonadeStand
                     precipForecast[i] = "75%";
                     break;
                 case 4:
-                    precipModifier[i] = 0.1;
+                    precipModifier[i] = 0.3;
                     precipForecast[i] = "100%";
                     break;
             }
@@ -103,7 +103,6 @@ namespace LemonadeStand
             }
             Console.WriteLine();
             Console.WriteLine("Press enter to get started");
-            Console.WriteLine();
             Console.ReadLine();
         }
 
@@ -132,7 +131,6 @@ namespace LemonadeStand
             baseDemand[i] = Convert.ToInt32((100 + tempModifier[i]) * precipModifier[i]);
 
             return baseDemand[i];
-
         }
     }
 }

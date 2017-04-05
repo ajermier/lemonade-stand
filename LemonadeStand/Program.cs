@@ -12,7 +12,6 @@ namespace LemonadeStand
         {
             //Player player = new Player();
             Game game = new Game();
-            game.GetDay();
 
             Console.ReadLine();
         }

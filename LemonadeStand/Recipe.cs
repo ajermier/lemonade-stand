@@ -11,12 +11,12 @@ namespace LemonadeStand
         //member variables
 
         //constructors
-        public Recipe()
+        public Recipe(Inventory inventory)
         {
-            PromptForRecipe();
+            PromptForRecipe(inventory);
         }
         //methods
-        public void PromptForRecipe()
+        public void PromptForRecipe(Inventory inventory)
         {
             Console.WriteLine("----------Recipe----------");
             Console.WriteLine("You can change your recipe if you want. The default is:");
@@ -28,36 +28,36 @@ namespace LemonadeStand
             Console.WriteLine("sugar (2:1 by default).");
             Console.WriteLine();
             Console.Write("Do you want to change from the tried and true default recipe? (y or n): ");
-            ReadAnswerYN();
+            ReadAnswerYN(inventory);
             Console.WriteLine();
         }
-        public void ReadAnswerYN()
+        public void ReadAnswerYN(Inventory inventory)
         {
             switch (Console.ReadLine())
             {
                 case "y":
-                    GetNewRecipe();
+                    GetNewRecipe(inventory);
                     Console.WriteLine();
                     break;
                 case "n":
                     break;
                 default:
                     Console.WriteLine("Error: Please enter 'y' or 'n'.");
-                    ReadAnswerYN();
+                    ReadAnswerYN(inventory);
                     break;
             }
         }
-        public void GetNewRecipe()
+        public void GetNewRecipe(Inventory inventory)
         {
             Console.WriteLine("Total parts must equal 1.5:");
             Console.Write("How many parts sugar (default 0.5)? ");
-            double.TryParse(Console.ReadLine(), out sugar.unitProportion);
+            double.TryParse(Console.ReadLine(), out inventory.sugar.unitProportion);
             Console.Write("How many parts lemon (default 1.0)? ");
-            double.TryParse(Console.ReadLine(), out lemons.unitProportion);
+            double.TryParse(Console.ReadLine(), out inventory.lemons.unitProportion);
 
-            if (sugar.unitProportion + lemons.unitProportion != 1.5)
+            if (inventory.sugar.unitProportion + inventory.lemons.unitProportion != 1.5)
             {
-                GetNewRecipe();
+                GetNewRecipe(inventory);
             }
         }
     }
