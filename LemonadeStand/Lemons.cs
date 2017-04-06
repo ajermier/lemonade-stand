@@ -36,7 +36,7 @@ namespace LemonadeStand
             return buyAmount;
         }
 
-        public override void RemoveInventory()
+        protected override void RemoveInventory()
         {
             stock = stock - unitProportion;
         }

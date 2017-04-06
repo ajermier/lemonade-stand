@@ -49,7 +49,7 @@ namespace LemonadeStand
                 return false;
             }
         }
-        public void UpdateStock()
+        private void UpdateStock()
         {
             lemons.RemoveInventory();
             sugar.RemoveInventory();
@@ -57,7 +57,7 @@ namespace LemonadeStand
             cups.RemoveInventory();
         }
 
-        public virtual void RemoveInventory()
+        protected virtual void RemoveInventory()
         {
             stock = stock - 1;
         }

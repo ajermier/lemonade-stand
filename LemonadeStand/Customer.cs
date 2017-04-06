@@ -13,11 +13,6 @@ namespace LemonadeStand
         public int thirst;
 
         //constructors
-        public Customer()
-        {
-            thirst = 1;
-        }
-
         public Customer(Random number, int baseDemand)
         {
             thirst = 1;
@@ -27,7 +22,6 @@ namespace LemonadeStand
         //methods
         private void GetCustomerPrice(Random number, int baseDemand)
         {
-
             if (baseDemand >= 90)
             {
                 double num1 = number.Next(250, 350)/100.0;

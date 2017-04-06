@@ -11,9 +11,9 @@ namespace LemonadeStand
         //member variables
         public int unitProportion;
         public static double unitPrice;
-        public double bulkPrice;
-        public int bulkAmount;
         public int buyAmount;
+        private double bulkPrice;
+        private int bulkAmount;
 
         //constructors
         public IceCubes()
@@ -47,7 +47,7 @@ namespace LemonadeStand
 
             return unitCost;
         }
-        public override void RemoveInventory()
+        protected override void RemoveInventory()
         {
             stock = stock - (unitProportion);
         }

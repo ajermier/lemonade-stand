@@ -9,18 +9,15 @@ namespace LemonadeStand
     class Weather
     {
         //member variables
-        int[] tempModifier;
-        double[] precipModifier;
-        public int[] tempForecast;
-        public string[] precipForecast;
-        public int[] baseDemand;
-
-        Random number;
-
+        private int[] tempModifier;
+        private double[] precipModifier;
+        private int[] tempForecast;
+        private string[] precipForecast;
+        private int[] baseDemand;
+        
         //constructors
         public Weather()
         {
-
             tempModifier = new int[7];
             tempForecast = new int[7];
             precipModifier = new double[7];
@@ -90,7 +87,7 @@ namespace LemonadeStand
             }
         }
 
-        public void GetWeekForecast()
+        private void GetWeekForecast()
         {
             Random number = new Random();
 

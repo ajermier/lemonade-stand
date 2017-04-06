@@ -13,7 +13,8 @@ namespace LemonadeStand
         private Weather weather;
         private Day day;
 
-        private double totalProfit;
+        private double totalWeeklyProfit;
+        private double maxDailyProfit;
 
         //constructors
         public Game()
@@ -24,9 +25,10 @@ namespace LemonadeStand
         }
 
         //methods
-        public void GetWeek()
+        private void GetWeek()
         {
-            totalProfit = 0;
+            totalWeeklyProfit = 0;
+            maxDailyProfit = 0;
             weather = new Weather();
 
             int i = 0;         
@@ -34,9 +36,14 @@ namespace LemonadeStand
             {
                 day = new Day(player, weather, i);
                 i++;
-                totalProfit = totalProfit + day.DailyProfit;
+                totalWeeklyProfit = totalWeeklyProfit + day.DailyProfit;
+                if(maxDailyProfit < day.DailyProfit)
+                {
+                    maxDailyProfit = day.DailyProfit;
+                }
             }
-            UserInterface.GetEndGame(totalProfit, i);
+            UserInterface.GetEndGame(totalWeeklyProfit, i);
+            Connection.AddScore(player.name, totalWeeklyProfit, maxDailyProfit);
             if(player.Balance > 5)
                 ContinueToNewWeek();
             else

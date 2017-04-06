@@ -11,9 +11,9 @@ namespace LemonadeStand
         //member variables
         public double unitProportion;
         public static double unitPrice;
-        public double bulkPrice;
-        public int bulkAmount;
         public int buyAmount;
+        private double bulkPrice;
+        private int bulkAmount;
 
         //constructors
         public Cups()

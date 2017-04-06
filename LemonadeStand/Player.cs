@@ -10,16 +10,17 @@ namespace LemonadeStand
     {
         //member variables
         public double price;
-        private double balance;
-        //public string name;
+        public string name;
         public Inventory inventory;
         public Recipe recipe;
+        private double balance;
         private double unitCost;
         public double Balance { get { return balance; } set { value = balance; } }
 
         //constructors
         public Player()
         {
+            name = GetPlayerName();
             balance = 20;
             inventory = new Inventory();
             inventory.AddInitialInventory();
@@ -78,7 +79,7 @@ namespace LemonadeStand
 
             return unitCost;
         }
-        public bool CheckFundsAvail(int quantity, double unitPrice)
+        private bool CheckFundsAvail(int quantity, double unitPrice)
         {
             double total = unitPrice * quantity;
 
@@ -105,6 +106,14 @@ namespace LemonadeStand
             Console.WriteLine("-----balance-----");
             Console.WriteLine($" ${bal}");
             Console.WriteLine();
+        }
+        public string GetPlayerName()
+        {
+            Console.Write("Enter your name: ");
+            name = Console.ReadLine();
+            Console.WriteLine();
+
+            return name;
         }
     }
 }

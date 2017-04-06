@@ -15,7 +15,7 @@ namespace LemonadeStand
         {
         }
         //methods
-        public void GetRecipe(Inventory inventory)
+        private void GetRecipe(Inventory inventory)
         {
             Console.WriteLine("----------Recipe----------");
             Console.WriteLine("You can change your recipe if you want. The default is:");
@@ -33,7 +33,7 @@ namespace LemonadeStand
             ReadAnswerYN(inventory);
             Console.WriteLine();
         }
-        public void ReadAnswerYN(Inventory inventory)
+        private void ReadAnswerYN(Inventory inventory)
         {
             switch (Console.ReadLine())
             {
@@ -49,14 +49,14 @@ namespace LemonadeStand
                     break;
             }
         }
-        public void GetNewLemonadeRecipe(Inventory inventory)
+        private void GetNewLemonadeRecipe(Inventory inventory)
         {
             Console.WriteLine();
             GetRecipe(inventory);
             GetLemonadeIngredients(inventory);
             GetIce(inventory);
         }
-        public void GetLemonadeIngredients(Inventory inventory)
+        private void GetLemonadeIngredients(Inventory inventory)
         {
             Console.WriteLine("Total parts must equal 1.5:");
             Console.Write("How many parts sugar (default 0.5)? ");
@@ -87,7 +87,7 @@ namespace LemonadeStand
             }
         }
 
-        public void GetIce(Inventory inventory)
+        private void GetIce(Inventory inventory)
         {
             Console.Write("How many ice cubes in each cup (default 3)? ");
             while(!int.TryParse(Console.ReadLine(), out inventory.iceCubes.unitProportion) || inventory.iceCubes.unitProportion < 1)
