@@ -22,26 +22,34 @@ namespace LemonadeStand
         {
             GetDay(player, weather, dayOfWeek);
         }
-
+ 
         //methods
         public void GetDay(Player player, Weather weather, int i)
         {
             player.inventory.supply = 0;
 
+            DisplayDayStart(i+1);
+            player.recipe.PromptForRecipe(player.inventory);
             weather.GetActualWeather(i);
             player.inventory.DisplayInventory();
             player.GetIngredients();
-            player.inventory.MakeBatch();
+            player.inventory.DisplayInventory();
+            weather.DisplayCurrentWeather(i);
+            player.inventory.MakeBatch(player.inventory.PromptForBatch());
             player.inventory.DisplayInventory();
             GetExpense(player);
+            weather.DisplayCurrentWeather(i);
             player.GetPrice();
 
             GetCustomerList(i, weather);
             GetSales(player, customerList);
-            DisplaySales(player);
-            DisplayExpense();
-            DisplayProfit();
             player.Credit(dailySales);
+            DisplayDaySummary(player, i+1);
+            if(i < 6)
+            {
+                Console.Write("Press Enter to continue to next day.");
+                Console.ReadLine();
+            }
         }
         private void GetSales(Player player, List<Customer> customerList)
         {
@@ -101,6 +109,22 @@ namespace LemonadeStand
             Console.WriteLine("-----Profit/Loss-----");
             Console.WriteLine($" ${profit}");
             Console.WriteLine();
+        }
+        private void DisplayDayStart(int day)
+        {
+            Console.Clear();
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine($"----------------------DAY {day}----------------------");
+            Console.WriteLine("-------------------------------------------------");
+
+        }
+        private void DisplayDaySummary(Player player, int day)
+        {
+            Console.WriteLine($"----------------DAY {day} SUMMARY---------------");
+            DisplaySales(player);
+            DisplayExpense();
+            DisplayProfit();
+            player.DisplayBalance();
         }
     }
 }

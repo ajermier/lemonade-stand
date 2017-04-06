@@ -28,8 +28,10 @@ namespace LemonadeStand
             string price = string.Format("{0:N2}", Math.Round(Lemons.unitPrice * 100) / 100);
             Console.WriteLine($"Lemons cost ${price} per lemon.");
             Console.Write("Enter amount of lemons to purchase: ");
-            int.TryParse(Console.ReadLine(), out buyAmount);
-            Console.WriteLine();
+            while (!int.TryParse(Console.ReadLine(), out buyAmount) || buyAmount < 0)
+            {
+                Console.Write("ALERT: Enter a positive number or 0 to not purchase anything: ");
+            }
 
             return buyAmount;
         }

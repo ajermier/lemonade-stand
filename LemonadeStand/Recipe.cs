@@ -13,10 +13,9 @@ namespace LemonadeStand
         //constructors
         public Recipe(Inventory inventory)
         {
-            PromptForRecipe(inventory);
         }
         //methods
-        public void PromptForRecipe(Inventory inventory)
+        public void GetRecipe(Inventory inventory)
         {
             Console.WriteLine("----------Recipe----------");
             Console.WriteLine("You can change your recipe if you want. The default is:");
@@ -27,6 +26,9 @@ namespace LemonadeStand
             Console.WriteLine("content you can only adjust the ratio of lemon juice to ");
             Console.WriteLine("sugar (2:1 by default).");
             Console.WriteLine();
+        }
+        public void PromptForRecipe(Inventory inventory)
+        {
             Console.Write("Do you want to change from the tried and true default recipe? (y or n): ");
             ReadAnswerYN(inventory);
             Console.WriteLine();
@@ -36,28 +38,67 @@ namespace LemonadeStand
             switch (Console.ReadLine())
             {
                 case "y":
-                    GetNewRecipe(inventory);
-                    Console.WriteLine();
+                    GetNewLemonadeRecipe(inventory);
                     break;
                 case "n":
+                    Console.WriteLine();
                     break;
                 default:
-                    Console.WriteLine("Error: Please enter 'y' or 'n'.");
+                    Console.Write("Error: Please enter 'y' or 'n': ");
                     ReadAnswerYN(inventory);
                     break;
             }
         }
-        public void GetNewRecipe(Inventory inventory)
+        public void GetNewLemonadeRecipe(Inventory inventory)
+        {
+            Console.WriteLine();
+            GetRecipe(inventory);
+            GetLemonadeIngredients(inventory);
+            GetIce(inventory);
+        }
+        public void GetLemonadeIngredients(Inventory inventory)
         {
             Console.WriteLine("Total parts must equal 1.5:");
             Console.Write("How many parts sugar (default 0.5)? ");
-            double.TryParse(Console.ReadLine(), out inventory.sugar.unitProportion);
+            while(!double.TryParse(Console.ReadLine(), out inventory.sugar.unitProportion) || inventory.sugar.unitProportion < 0)
+            {
+                Console.Write("Enter a positive number only: ");
+            }
             Console.Write("How many parts lemon (default 1.0)? ");
-            double.TryParse(Console.ReadLine(), out inventory.lemons.unitProportion);
+            while (!double.TryParse(Console.ReadLine(), out inventory.lemons.unitProportion) || inventory.lemons.unitProportion < 0)
+            {
+                Console.Write("Enter a positive number only: ");
+            }
+
+            Console.WriteLine();
 
             if (inventory.sugar.unitProportion + inventory.lemons.unitProportion != 1.5)
             {
-                GetNewRecipe(inventory);
+                Console.WriteLine("The proportions you entered did not equal 1.5. Try again.");
+                Console.WriteLine();
+                GetLemonadeIngredients(inventory);
+            }
+            else if (inventory.sugar.unitProportion < 0.1 || inventory.lemons.unitProportion < 0.1)
+            {
+                Console.WriteLine("You cannot go below 0.1 parts for any ingredient, otherwise");
+                Console.WriteLine("Your lemonade will be far too sweet or lemony.");
+                Console.WriteLine();
+                GetLemonadeIngredients(inventory);
+            }
+        }
+
+        public void GetIce(Inventory inventory)
+        {
+            Console.Write("How many ice cubes in each cup (default 3)? ");
+            while(!int.TryParse(Console.ReadLine(), out inventory.iceCubes.unitProportion) || inventory.iceCubes.unitProportion < 1)
+            {
+                Console.Write("Enter a positive whole number only: ");
+            }
+
+            if (inventory.iceCubes.unitProportion < 1 || inventory.iceCubes.unitProportion > 5)
+            {
+                Console.WriteLine("You must have between 1 and 5 ice cubes per cup.");
+                GetIce(inventory);
             }
         }
     }

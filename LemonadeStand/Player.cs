@@ -40,9 +40,14 @@ namespace LemonadeStand
             inventory.sugar.AddNewInventory(inventory.sugar.buyAmount);
             Debit(inventory.sugar.buyAmount, Sugar.unitPrice);
             DisplayBalance();
+            while (!CheckFundsAvail(inventory.iceCubes.Buy(), IceCubes.unitPrice));
+            inventory.iceCubes.AddNewInventory(inventory.iceCubes.buyAmount);
+            Debit(inventory.iceCubes.buyAmount, IceCubes.unitPrice);
+            DisplayBalance();
             while (!CheckFundsAvail(inventory.cups.Buy(), Cups.unitPrice));
             inventory.cups.AddNewInventory(inventory.cups.buyAmount);
             Debit(inventory.cups.buyAmount, Cups.unitPrice);
+            DisplayBalance();
             Console.WriteLine();
         }
         public void GetPrice()
@@ -67,8 +72,9 @@ namespace LemonadeStand
             double lemonsUnitCost = inventory.lemons.GetUnitCost();
             double sugarUnitCost = inventory.sugar.GetUnitCost();
             double cupUnitCost = inventory.cups.GetUnitCost();
+            double iceUnitCost = inventory.iceCubes.GetUnitCost();
 
-            unitCost = lemonsUnitCost + sugarUnitCost + cupUnitCost;
+            unitCost = lemonsUnitCost + sugarUnitCost + cupUnitCost + iceUnitCost;
 
             return unitCost;
         }

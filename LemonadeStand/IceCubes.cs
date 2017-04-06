@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Sugar : Inventory
+    class IceCubes : Inventory
     {
         //member variables
-        public double unitProportion;
+        public int unitProportion;
         public static double unitPrice;
         public double bulkPrice;
         public int bulkAmount;
         public int buyAmount;
 
         //constructors
-        public Sugar()
+        public IceCubes()
         {
-            unitPrice = 0.30;
-            bulkAmount = 9;
+            unitPrice = 0.02;
+            bulkAmount = 150;
             bulkPrice = unitPrice * bulkAmount;
-            unitProportion = 0.50;
+            unitProportion = 3;
             quantity = 0;
             stock = 0;
         }
@@ -30,26 +30,26 @@ namespace LemonadeStand
         public int Buy()
         {
             string price = string.Format("{0:N2}", Math.Round(bulkPrice * 100) / 100);
-            Console.WriteLine($"Sugar costs ${price} per 4 lb bag ({bulkAmount} cups).");
-            Console.Write("Enter amount of 4 lb bags of sugar to purchase: ");
-            while(!int.TryParse(Console.ReadLine(), out buyAmount) || buyAmount < 0)
+
+            Console.WriteLine($"Ice costs ${price} per 5 lb bag ({bulkAmount} cubes).");
+            Console.Write("Enter amount of 5 lb bags of ice to purchase: ");
+            while (!int.TryParse(Console.ReadLine(), out buyAmount) || buyAmount < 0)
             {
-                Console.Write("ALERT: Enter a positive number or 0 to not purchase anything: ");
+                Console.Write("ALERT: Enter a positive number or 0 to not purchase anything:");
             }
             buyAmount = buyAmount * bulkAmount;
 
             return buyAmount;
         }
-
-        public override void RemoveInventory()
-        {
-            stock = stock - (unitProportion/totalServingProportion);
-        }
         public double GetUnitCost()
         {
-            double unitCost = (unitProportion/totalServingProportion) * unitPrice;
+            double unitCost = (unitProportion) * unitPrice;
 
             return unitCost;
+        }
+        public override void RemoveInventory()
+        {
+            stock = stock - (unitProportion);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace LemonadeStand
         //methods
         public void GetWeek()
         {
+            totalProfit = 0;
             weather = new Weather();
 
             int i = 0;         
@@ -35,42 +36,30 @@ namespace LemonadeStand
                 i++;
                 totalProfit = totalProfit + day.DailyProfit;
             }
-            UserInterface.GetEndGame(totalProfit);
-            RestartQuitGame();
+            UserInterface.GetEndGame(totalProfit, i);
+            if(player.Balance > 5)
+                ContinueToNewWeek();
+            else
+                UserInterface.RestartQuitGame();
         }
         private bool CheckForLoser(Player player)
         {
             if (player.Balance <= 5)
             {
-                Console.WriteLine("You ran out of money, better luck next time.");
+                Console.WriteLine("You ran out of money, better luck next time. Better make sure you have enough for your uber ride home.");
                 Console.WriteLine();
                 return true;
             }
             else return false;
         }
-        private void RestartQuitGame()
-        {
-            Console.WriteLine("What do you want to do?");
-            Console.WriteLine(" 1- continue playing into another week");
-            Console.WriteLine(" 2- start over");
-            Console.WriteLine(" 3- quit");
-            string answer = Console.ReadLine();
 
-            switch (answer)
+        private void ContinueToNewWeek()
+        {
+            if (UserInterface.ReadAnswerYN("Do you want to continue on to another week? (y or n): ") == true)
             {
-                case "1":
-                    GetWeek();
-                    break;
-                case "2":
-                    Console.Clear();
-                    Game game = new Game();
-                    break;
-                case "3":
-                    break;
-                default:
-                    Console.WriteLine("Enter '1', '2', or '3'.");
-                    break;                    
+                GetWeek();
             }
+            else UserInterface.RestartQuitGame();
         }
     }
 }

@@ -16,6 +16,7 @@ namespace LemonadeStand
         public Lemons lemons;
         public Sugar sugar;
         public Cups cups;
+        public IceCubes iceCubes;
 
         //constructors
         public Inventory()
@@ -32,6 +33,7 @@ namespace LemonadeStand
         {
             lemons = new Lemons();
             sugar = new Sugar();
+            iceCubes = new IceCubes();
             cups = new Cups();
         }
         public bool CheckSupply()
@@ -51,6 +53,7 @@ namespace LemonadeStand
         {
             lemons.RemoveInventory();
             sugar.RemoveInventory();
+            iceCubes.RemoveInventory();
             cups.RemoveInventory();
         }
 
@@ -58,15 +61,27 @@ namespace LemonadeStand
         {
             stock = stock - 1;
         }
-        public void MakeBatch()
+
+        public int PromptForBatch()
         {
-            while (lemons.stock >= lemons.unitProportion && sugar.stock >= sugar.unitProportion && cups.stock >= cups.unitProportion )
+            int amount;
+            Console.Write("Enter number of cups of lemonade you want to prepare for today: ");
+            while (!int.TryParse(Console.ReadLine(), out amount) || amount < 0)
+            {
+                Console.Write("ALERT: Enter a positive number or 0 to not make any: ");
+            }
+
+            return amount;
+        }
+        public void MakeBatch(int amount)
+        {
+            while (lemons.stock >= lemons.unitProportion && sugar.stock >= sugar.unitProportion && cups.stock >= cups.unitProportion && iceCubes.stock >= iceCubes.unitProportion && supply < amount)
             {
                 supply = supply + 1;
                 UpdateStock();
             }
 
-            Console.WriteLine($"You have made enough to sell {supply} glasses of lemonade.");
+            Console.WriteLine($"You had enough ingredients to make {supply} of {amount} cups of lemonade today.");
             Console.WriteLine();
         }
         public void DisplayInventory()
@@ -76,6 +91,7 @@ namespace LemonadeStand
             Console.WriteLine("-----Inventory-----");
             Console.WriteLine($"Lemons: {lem}");
             Console.WriteLine($"Sugar: {sug} cups");
+            Console.WriteLine($"Ice Cubes: {iceCubes.stock}");
             Console.WriteLine($"Cups: {cups.stock}");
             Console.WriteLine();
         }

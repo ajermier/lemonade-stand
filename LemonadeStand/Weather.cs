@@ -122,7 +122,7 @@ namespace LemonadeStand
                 GetChancePrecip(number, i);
                 Console.WriteLine($"...seems like the forecast was a litte off for today.");
             }
-            Console.WriteLine($"Today is a high of {tempForecast[i]} with a {precipForecast[i]} of rain.");
+            Console.WriteLine($"Today is a high of {tempForecast[i]} with a {precipForecast[i]} chance of rain.");
             Console.WriteLine();
         }
 
@@ -131,6 +131,11 @@ namespace LemonadeStand
             baseDemand[i] = Convert.ToInt32((100 + tempModifier[i]) * precipModifier[i]);
 
             return baseDemand[i];
+        }
+        public void DisplayCurrentWeather(int i)
+        {
+            Console.WriteLine($"Today is a high of {tempForecast[i]} with a {precipForecast[i]} chance of rain.");
+            Console.WriteLine();
         }
     }
 }

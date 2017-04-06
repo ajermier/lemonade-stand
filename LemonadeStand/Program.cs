@@ -12,8 +12,6 @@ namespace LemonadeStand
         {
             //Player player = new Player();
             Game game = new Game();
-
-            Console.ReadLine();
         }
     }
 }

@@ -33,18 +33,53 @@ namespace LemonadeStand
             Console.WriteLine("any day your balance is below $5 the game is over.");
             Console.WriteLine();
         }
-        public static void GetEndGame(double totalProfit)
+        public static void GetEndGame(double totalProfit, int day)
         {
             if(totalProfit > 20)
             {
                 Console.WriteLine("Congradulations. You managed to turn a profit of");
                 Console.WriteLine($"${totalProfit} this week!");
             }
-            else if(totalProfit < 20)
+            else if(totalProfit < 0)
             {
-                double endBalance = 20 - totalProfit;
-                Console.WriteLine($"Well, you made it to the end of the week with a loss of {endBalance}");
+                Console.WriteLine($"You made it through day {day} with a loss of ${totalProfit}.");
                 Console.WriteLine("...maybe brush up on your economics.");
+            }
+        }
+        public static bool ReadAnswerYN(string question)
+        {
+            Console.Write(question);
+            switch (Console.ReadLine())
+            {
+                case "y":
+                    return true;
+                case "n":
+                    return false;
+                default:
+                    Console.Write("Error: Please enter 'y' or 'n': ");
+                    Console.WriteLine();
+                    break;
+            }
+            return ReadAnswerYN(question);
+        }
+        public static void RestartQuitGame()
+        {
+            Console.WriteLine("What do you want to do?");
+            Console.WriteLine(" 1- start over");
+            Console.WriteLine(" 2- quit");
+            string answer = Console.ReadLine();
+
+            switch (answer)
+            {
+                case "1":
+                    Console.Clear();
+                    Game game = new Game();
+                    break;
+                case "2":
+                    break;
+                default:
+                    Console.WriteLine("Enter '1' or '2' only.");
+                    break;
             }
         }
     }
