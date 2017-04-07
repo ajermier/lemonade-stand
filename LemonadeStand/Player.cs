@@ -32,6 +32,9 @@ namespace LemonadeStand
         //methods
         public void GetIngredients()
         {
+            Console.WriteLine("The first thing we have to do is buy some ingredients:");
+            Console.WriteLine();
+
             DisplayBalance();
             while (!CheckFundsAvail(inventory.lemons.Buy(), Lemons.unitPrice));
             inventory.lemons.AddNewInventory(inventory.lemons.buyAmount);
@@ -111,6 +114,11 @@ namespace LemonadeStand
         {
             Console.Write("Enter your name: ");
             name = Console.ReadLine();
+            while (String.IsNullOrEmpty(name))
+            {
+                Console.Write("You must enter a name:");
+                name = Console.ReadLine();
+            }
             Console.WriteLine();
 
             return name;

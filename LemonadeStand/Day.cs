@@ -18,34 +18,37 @@ namespace LemonadeStand
         public double DailyProfit { get { return dailyProfit; } }
 
         //constructors
-        public Day(Player player, Weather weather, int dayOfWeek)
+        public Day(Player player, Weather weather, int dayOfWeek, Random number)
         {
-            GetDay(player, weather, dayOfWeek);
+            GetDay(player, weather, dayOfWeek, number);
         }
  
         //methods
-        public void GetDay(Player player, Weather weather, int i)
+        public void GetDay(Player player, Weather weather, int i, Random number)
         {
             player.inventory.supply = 0;
 
             DisplayDayStart(i+1);
             player.recipe.PromptForRecipe(player.inventory);
-            weather.GetActualWeather(i);
+            weather.GetActualWeather(i, number);
             player.inventory.DisplayInventory();
             player.GetIngredients();
+
+            DisplayDayStart(i + 1);
             player.inventory.DisplayInventory();
             weather.DisplayCurrentWeather(i);
             player.inventory.MakeBatch(player.inventory.PromptForBatch());
             player.inventory.DisplayInventory();
             GetExpense(player);
-            weather.DisplayCurrentWeather(i);
             player.GetPrice();
 
+            DisplayDayStart(i + 1);
             GetCustomerList(i, weather);
             GetSales(player, customerList);
             player.Credit(dailySales);
             DisplayDaySummary(player, i+1);
-            if(i < 6)
+
+            if(i < 6 && player.Balance >= 5)
             {
                 Console.Write("Press Enter to continue to next day.");
                 Console.ReadLine();
@@ -116,11 +119,12 @@ namespace LemonadeStand
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine($"----------------------DAY {day}----------------------");
             Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine();
 
         }
         private void DisplayDaySummary(Player player, int day)
         {
-            Console.WriteLine($"----------------DAY {day} SUMMARY---------------");
+            Console.WriteLine($"--------------END OF DAY {day} SUMMARY--------------");
             DisplaySales(player);
             DisplayExpense();
             DisplayProfit();

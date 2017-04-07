@@ -16,7 +16,7 @@ namespace LemonadeStand
         private int[] baseDemand;
         
         //constructors
-        public Weather()
+        public Weather(Random number)
         {
             tempModifier = new int[7];
             tempForecast = new int[7];
@@ -24,7 +24,7 @@ namespace LemonadeStand
             precipForecast = new string[7];
             baseDemand = new int[7];
 
-            GetWeekForecast();
+            GetWeekForecast(number);
         }
 
         //methods
@@ -87,10 +87,8 @@ namespace LemonadeStand
             }
         }
 
-        private void GetWeekForecast()
+        private void GetWeekForecast(Random number)
         {
-            Random number = new Random();
-
             Console.WriteLine("----------Weekly Weather Forcast----------");
             for (int i = 0; i < 7; i++)
             {
@@ -101,23 +99,24 @@ namespace LemonadeStand
             Console.WriteLine();
             Console.WriteLine("Press enter to get started");
             Console.ReadLine();
+            Console.WriteLine();
         }
 
-        public void GetActualWeather(int i)
+        public void GetActualWeather(int i, Random number)
         {
-            Random number = new Random();
-
             int num = number.Next(0, 4);
 
             if (num == 1)
             {
                 GetTemperature(number, i);
                 Console.WriteLine($"...seems like the forecast was a little off for today.");
+                Console.WriteLine();
             }
             else if (num == 0)
             {
                 GetChancePrecip(number, i);
                 Console.WriteLine($"...seems like the forecast was a litte off for today.");
+                Console.WriteLine();
             }
             Console.WriteLine($"Today is a high of {tempForecast[i]} with a {precipForecast[i]} chance of rain.");
             Console.WriteLine();

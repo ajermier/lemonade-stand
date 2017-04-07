@@ -37,6 +37,7 @@ namespace LemonadeStand
                 Console.Write("ALERT: Enter a positive number or 0 to not purchase anything: ");
             }
             buyAmount = buyAmount * bulkAmount;
+            Console.WriteLine();
 
             return buyAmount;
         }

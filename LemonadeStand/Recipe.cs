@@ -31,7 +31,6 @@ namespace LemonadeStand
         {
             Console.Write("Do you want to change from the tried and true default recipe? (y or n): ");
             ReadAnswerYN(inventory);
-            Console.WriteLine();
         }
         private void ReadAnswerYN(Inventory inventory)
         {

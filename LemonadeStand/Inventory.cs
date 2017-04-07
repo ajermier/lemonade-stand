@@ -70,6 +70,7 @@ namespace LemonadeStand
             {
                 Console.Write("ALERT: Enter a positive number or 0 to not make any: ");
             }
+            Console.WriteLine();
 
             return amount;
         }

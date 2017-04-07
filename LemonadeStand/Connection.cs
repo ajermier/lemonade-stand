@@ -26,7 +26,7 @@ namespace LemonadeStand
                 connect = new SqlConnection();
                 connect.ConnectionString = "Data Source=AJLAPTOP;Initial Catalog=LemonadeStand;Integrated Security=True";
                 connect.Open();
-                SqlCommand command = new SqlCommand($"INSERT INTO HighScores (playerName, weeklyProfit, dailyProfit) VALUES ('{name}', {totalWeeklyProfit}, {maxDailyProfit});", connect);
+                SqlCommand command = new SqlCommand($"INSERT INTO HighScores (playerName, weeklyProfit, dailyProfit) VALUES ('{name}', {totalWeeklyProfit*100}, {maxDailyProfit*100});", connect);
                 command.ExecuteNonQuery();
                 Console.WriteLine("Updating record boards...");
             }
@@ -50,9 +50,14 @@ namespace LemonadeStand
                 connect = new SqlConnection();
                 connect.ConnectionString = "Data Source=AJLAPTOP;Initial Catalog=LemonadeStand;Integrated Security=True";
                 connect.Open();
-//                SqlCommand command = new SqlCommand($"", connect);
-//                command.ExecuteNonQuery();
-//                Console.WriteLine("Updating record boards...");
+                SqlCommand command = new SqlCommand("SELECT TOP 10 playerName, weeklyProfit, dailyProfit FROM HighScores ORDER BY weeklyProfit DESC;", connect);
+                SqlDataReader read = command.ExecuteReader();
+                while (read.Read())
+                {
+                    names.Add(read["playerName"].ToString());
+                    highWeeklyProfit.Add(Convert.ToDouble(read["weeklyProfit"])/100);
+                    highDailyProfit.Add(Convert.ToDouble(read["dailyProfit"])/100);
+                }
             }
             catch (Exception e)
             {

@@ -12,6 +12,8 @@ namespace LemonadeStand
         private Player player;
         private Weather weather;
         private Day day;
+        private Random number;
+        private Random number2;
 
         private double totalWeeklyProfit;
         private double maxDailyProfit;
@@ -21,20 +23,24 @@ namespace LemonadeStand
         {
             UserInterface.GetBeginGame();
             player = new Player();
-            GetWeek();
+            number = new Random();
+            GetWeek(number);
         }
 
         //methods
-        private void GetWeek()
+        private void GetWeek(Random number)
         {
             totalWeeklyProfit = 0;
             maxDailyProfit = 0;
-            weather = new Weather();
 
-            int i = 0;         
+            DisplayNewWeek();     
+            weather = new Weather(number);
+            number2 = new Random();
+            int i = 0;
+
             while (CheckForLoser(player)==false && i < 7)
             {
-                day = new Day(player, weather, i);
+                day = new Day(player, weather, i, number2);
                 i++;
                 totalWeeklyProfit = totalWeeklyProfit + day.DailyProfit;
                 if(maxDailyProfit < day.DailyProfit)
@@ -42,12 +48,18 @@ namespace LemonadeStand
                     maxDailyProfit = day.DailyProfit;
                 }
             }
+
             UserInterface.GetEndGame(totalWeeklyProfit, i);
             Connection.AddScore(player.name, totalWeeklyProfit, maxDailyProfit);
-            if(player.Balance > 5)
-                ContinueToNewWeek();
+
+            if (player.Balance > 5)
+            {
+                DisplayContinueMenu();
+            }
             else
-                UserInterface.RestartQuitGame();
+            {
+                UserInterface.GetMainMenu();
+            }
         }
         private bool CheckForLoser(Player player)
         {
@@ -59,14 +71,56 @@ namespace LemonadeStand
             }
             else return false;
         }
-
-        private void ContinueToNewWeek()
+        private void DisplayContinueMenu()
         {
-            if (UserInterface.ReadAnswerYN("Do you want to continue on to another week? (y or n): ") == true)
+            Console.WriteLine();
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("-------------------END OF WEEK-------------------");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("------        1- View Leaderboard          ------");
+            Console.WriteLine("------        2- Continue Playing          ------");
+            Console.WriteLine("------        3- Quit                      ------");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine();
+            ContinueChoice(Console.ReadLine());
+        }
+        private void ContinueChoice(string choice)
+        {
+            switch (choice)
             {
-                GetWeek();
+                case "1":
+                    Console.Clear();
+                    Connection.GetHighScores();
+                    Console.WriteLine();
+                    UserInterface.DisplayLeaderBoard(Connection.names, Connection.highWeeklyProfit, Connection.highDailyProfit);
+                    Console.WriteLine();
+                    Console.Write("Press enter to go BACK.");
+                    Console.ReadKey();
+                    Console.Clear();
+                    DisplayContinueMenu();
+                    break;
+                case "2":
+                    Console.Clear();
+                    number = new Random();
+                    GetWeek(number);
+                    break;
+                case "3":
+                    UserInterface.GetMainMenu();
+                    break;
+                default:
+                    Console.WriteLine();
+                    Console.Write("Invalid Input. Try Again: ");
+                    ContinueChoice(Console.ReadLine());
+                    break;
             }
-            else UserInterface.RestartQuitGame();
+        }
+        private void DisplayNewWeek()
+        {
+            Console.Clear();
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("--------------------NEW WEEK---------------------");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine();
         }
     }
 }
