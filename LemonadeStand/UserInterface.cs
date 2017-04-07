@@ -77,10 +77,10 @@ namespace LemonadeStand
         public static void GetBackToMenu()
         {
             Console.WriteLine();
-            Console.WriteLine("-------------------------------------------------");
-            Console.WriteLine("------        1- Back to Main Menu         ------");
-            Console.WriteLine("-------------------------------------------------");
-            BackToMenuChoice(Console.ReadLine());
+            Console.Write("Press enter to go BACK.");
+            Console.ReadKey();
+            Console.Clear();
+            GetMainMenu();
         }
         public static void BackToMenuChoice(string choice)
         {
@@ -97,22 +97,6 @@ namespace LemonadeStand
                     BackToMenuChoice(Console.ReadLine());
                     break;
 
-            }
-        }
-
-        public static void GetEndGame(double totalProfit, int day)
-        {
-            if(totalProfit > 20)
-            {
-                Console.WriteLine("Congradulations. You managed to turn a profit of");
-                Console.WriteLine($"${totalProfit} this week!");
-                Console.WriteLine();
-            }
-            else if(totalProfit < 0)
-            {
-                Console.WriteLine($"You made it through day {day} with a loss of ${totalProfit}.");
-                Console.WriteLine("...maybe brush up on your economics.");
-                Console.WriteLine();
             }
         }
         public static bool ReadAnswerYN(string question)

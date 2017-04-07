@@ -17,12 +17,32 @@ namespace LemonadeStand
 
         private double totalWeeklyProfit;
         private double maxDailyProfit;
+        private string saveName;
 
         //constructors
         public Game()
         {
-            UserInterface.GetBeginGame();
+            UserInterface.GetBeginGame(); //for new game
             player = new Player();
+            number = new Random();
+            GetWeek(number);
+        }
+        public Game(string saveName) //for load game
+        {
+            player = new Player();
+
+            Connection.Load(saveName);
+
+            player.name = Connection.playerName;
+            player.Balance = Connection.balance;
+            player.inventory.lemons.stock = Connection.lemonStock;
+            player.inventory.lemons.unitProportion = Connection.lemonProp;
+            player.inventory.sugar.stock = Connection.sugarStock;
+            player.inventory.sugar.unitProportion = Connection.sugarProp;
+            player.inventory.iceCubes.stock = Connection.iceStock;
+            player.inventory.iceCubes.unitProportion = Connection.iceProp;
+            player.inventory.cups.stock = Connection.cupStock;
+
             number = new Random();
             GetWeek(number);
         }
@@ -49,16 +69,34 @@ namespace LemonadeStand
                 }
             }
 
-            UserInterface.GetEndGame(totalWeeklyProfit, i);
+            GetEndGame(totalWeeklyProfit, i);
             Connection.AddScore(player.name, totalWeeklyProfit, maxDailyProfit);
 
             if (player.Balance > 5)
             {
                 DisplayContinueMenu();
+                //ask if they want to save
             }
             else
             {
                 UserInterface.GetMainMenu();
+            }
+        }
+        private void GetEndGame(double totalProfit, int day)
+        {
+            string total = string.Format("{0:N1}", Math.Round(totalProfit * 100) / 100);
+
+            if (totalProfit > 20)
+            {
+                Console.WriteLine("Congradulations. You managed to turn a profit of");
+                Console.WriteLine($"${total} this week!");
+                Console.WriteLine();
+            }
+            else if (totalProfit < 0)
+            {
+                Console.WriteLine($"You made it through day {day} with a loss of ${total}.");
+                Console.WriteLine("...maybe brush up on your economics.");
+                Console.WriteLine();
             }
         }
         private bool CheckForLoser(Player player)
@@ -71,7 +109,7 @@ namespace LemonadeStand
             }
             else return false;
         }
-        private void DisplayContinueMenu()
+        private void DisplayContinueMenu() //add save option
         {
             Console.WriteLine();
             Console.WriteLine("-------------------------------------------------");
@@ -79,7 +117,7 @@ namespace LemonadeStand
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine("------        1- View Leaderboard          ------");
             Console.WriteLine("------        2- Continue Playing          ------");
-            Console.WriteLine("------        3- Quit                      ------");
+            Console.WriteLine("------        3- Return to Main Menu       ------");
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine();
             ContinueChoice(Console.ReadLine());
@@ -121,6 +159,14 @@ namespace LemonadeStand
             Console.WriteLine("--------------------NEW WEEK---------------------");
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine();
+        }
+        private void LoadGame()//
+        {
+            Connection.Load(saveName);
+        }
+        private void SaveGame()//
+        {
+            Connection.SaveEndOfWeek("save1", player.name, player.Balance, player.inventory.lemons.stock, player.inventory.lemons.unitProportion, player.inventory.sugar.stock, player.inventory.sugar.unitProportion, Convert.ToInt32(player.inventory.iceCubes.stock), player.inventory.iceCubes.unitProportion, Convert.ToInt32(player.inventory.cups.stock));
         }
     }
 }

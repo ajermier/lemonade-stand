@@ -29,7 +29,7 @@ namespace LemonadeStand
         }
         public void PromptForRecipe(Inventory inventory)
         {
-            Console.Write("Do you want to change from the tried and true default recipe? (y or n): ");
+            Console.Write("Do you want to change your recipe today? (y or n): ");
             ReadAnswerYN(inventory);
         }
         private void ReadAnswerYN(Inventory inventory)
