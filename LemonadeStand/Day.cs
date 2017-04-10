@@ -96,7 +96,6 @@ namespace LemonadeStand
             Console.WriteLine($" ${sales}");
             Console.WriteLine();
         }
-
         private void DisplayExpense()
         {
             string expense = string.Format("{0:N2}", Math.Round(dailyExpense * 100) / 100);
@@ -104,7 +103,6 @@ namespace LemonadeStand
             Console.WriteLine($" ${expense}");
             Console.WriteLine();
         }
-
         private void DisplayProfit()
         {
             dailyProfit = dailySales - dailyExpense;
@@ -120,7 +118,6 @@ namespace LemonadeStand
             Console.WriteLine($"----------------------DAY {day}----------------------");
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine();
-
         }
         private void DisplayDaySummary(Player player, int day)
         {

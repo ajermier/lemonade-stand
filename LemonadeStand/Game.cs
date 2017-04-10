@@ -30,11 +30,9 @@ namespace LemonadeStand
         public Game(int saveID) //for load game
         {
             player = new Player(saveID);
-
             number = new Random();
             GetWeek(number);
         }
-
         //methods
         private void GetWeek(Random number)
         {
@@ -63,7 +61,6 @@ namespace LemonadeStand
             if (player.Balance > 5)
             {
                 DisplayContinueMenu();
-                //ask if they want to save
             }
             else
             {
@@ -76,7 +73,7 @@ namespace LemonadeStand
 
             if (totalProfit > 20)
             {
-                Console.WriteLine("Congradulations. You managed to turn a profit of");
+                Console.WriteLine("Congratulations. You managed to turn a profit of");
                 Console.WriteLine($"${total} this week!");
                 Console.WriteLine();
             }
@@ -97,7 +94,7 @@ namespace LemonadeStand
             }
             else return false;
         }
-        private void DisplayContinueMenu() //add save option
+        private void DisplayContinueMenu()
         {
             Console.WriteLine();
             Console.WriteLine("-------------------------------------------------");
@@ -137,6 +134,8 @@ namespace LemonadeStand
                     break;
 
                 case "4":
+                    Console.Clear();
+                    UserInterface.DisplayTitle();
                     UserInterface.GetMainMenu();
                     break;
                 default:
@@ -154,10 +153,6 @@ namespace LemonadeStand
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine();
         }
-        private void LoadGame(int saveID)
-        {
-            Connection.Load(saveID);
-        }
         private void SaveGame(string saveName)
         {
             Connection.SaveEndOfWeek(saveName, player.name, player.Balance, player.inventory.lemons.stock, player.inventory.lemons.unitProportion, player.inventory.sugar.stock, player.inventory.sugar.unitProportion, Convert.ToInt32(player.inventory.iceCubes.stock), player.inventory.iceCubes.unitProportion, Convert.ToInt32(player.inventory.cups.stock));
@@ -169,9 +164,12 @@ namespace LemonadeStand
             if (string.IsNullOrEmpty(name))
             {
                 Console.WriteLine("You must name your save game.");
-                GetSaveGameName();
+                return GetSaveGameName();
             }
+            else
+            {
             return name;
+            }
         }
     }
 }

@@ -8,8 +8,6 @@ namespace LemonadeStand
 {
     static class UserInterface
     {
-        //member variables
-
         //methods
         public static void DisplayTitle()
         {
@@ -56,9 +54,9 @@ namespace LemonadeStand
             {
                 case "1":
                     Console.Clear();
-                    Connection.GetHighScores();
                     DisplayTitle();
                     Console.WriteLine();
+                    Connection.GetHighScores();
                     DisplayLeaderBoard(Connection.names, Connection.highWeeklyProfit, Connection.highDailyProfit);
                     GetBackToMenu();
                     break;
@@ -89,6 +87,7 @@ namespace LemonadeStand
             Console.Write("Press enter to go BACK.");
             Console.ReadKey();
             Console.Clear();
+            DisplayTitle();
             GetMainMenu();
         }
         public static void BackToMenuChoice(string choice)
@@ -97,8 +96,8 @@ namespace LemonadeStand
             {
                 case "1":
                     Console.Clear();
-                    UserInterface.DisplayTitle();
-                    UserInterface.GetMainMenu();
+                    DisplayTitle();
+                    GetMainMenu();
                     break;
                 default:
                     Console.WriteLine();
@@ -126,9 +125,14 @@ namespace LemonadeStand
         }
         public static void RestartQuitGame()
         {
-            Console.WriteLine("What do you want to do?");
-            Console.WriteLine(" 1- start over");
-            Console.WriteLine(" 2- quit");
+            Console.WriteLine();
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("-------------------GAME  OVER--------------------");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("------        1- Start New Game            ------");
+            Console.WriteLine("------        2- Return to Main Menu       ------");
+            Console.WriteLine("-------------------------------------------------");
+            MainMenuChoice(Console.ReadLine());
             string answer = Console.ReadLine();
 
             switch (answer)
@@ -138,6 +142,9 @@ namespace LemonadeStand
                     Game game = new Game();
                     break;
                 case "2":
+                    Console.Clear();
+                    DisplayTitle();
+                    GetMainMenu();
                     break;
                 default:
                     Console.WriteLine("Enter '1' or '2' only.");
@@ -186,13 +193,13 @@ namespace LemonadeStand
         public static int GetLoadGameChoice(List <int> saveIDs)
         {
             int choice;
+            bool exists = false;
+
             Console.Write("Enter ID of the save game you would like to load: ");
             while(!int.TryParse(Console.ReadLine(), out choice))
             {
                 Console.Write("Enter SaveID number only: ");
             }
-
-            bool exists = false;
             for (int i = 0; i < saveIDs.Count; i++)
             {
                 if (choice == saveIDs[i])

@@ -31,8 +31,6 @@ namespace LemonadeStand
         public static int iceProp;
         public static int cupStock; 
 
-        //constructors
-
         //methods
         public static void AddScore(string name, double totalWeeklyProfit, double maxDailyProfit)
         {

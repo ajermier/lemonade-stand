@@ -113,12 +113,10 @@ namespace LemonadeStand
         {
             balance = balance - (unitPrice * quantity);
         }
-
         public void Credit(double amount)
         {
             balance = balance + amount;
         }
-
         public void DisplayBalance()
         {
             string bal = string.Format("{0:N2}", Math.Round(balance * 100) / 100);
