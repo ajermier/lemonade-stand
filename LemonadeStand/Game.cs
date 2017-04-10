@@ -27,21 +27,9 @@ namespace LemonadeStand
             number = new Random();
             GetWeek(number);
         }
-        public Game(string saveName) //for load game
+        public Game(int saveID) //for load game
         {
-            player = new Player();
-
-            Connection.Load(saveName);
-
-            player.name = Connection.playerName;
-            player.Balance = Connection.balance;
-            player.inventory.lemons.stock = Connection.lemonStock;
-            player.inventory.lemons.unitProportion = Connection.lemonProp;
-            player.inventory.sugar.stock = Connection.sugarStock;
-            player.inventory.sugar.unitProportion = Connection.sugarProp;
-            player.inventory.iceCubes.stock = Connection.iceStock;
-            player.inventory.iceCubes.unitProportion = Connection.iceProp;
-            player.inventory.cups.stock = Connection.cupStock;
+            player = new Player(saveID);
 
             number = new Random();
             GetWeek(number);
@@ -53,17 +41,17 @@ namespace LemonadeStand
             totalWeeklyProfit = 0;
             maxDailyProfit = 0;
 
-            DisplayNewWeek();     
+            DisplayNewWeek();
             weather = new Weather(number);
             number2 = new Random();
             int i = 0;
 
-            while (CheckForLoser(player)==false && i < 7)
+            while (CheckForLoser(player) == false && i < 7)
             {
                 day = new Day(player, weather, i, number2);
                 i++;
                 totalWeeklyProfit = totalWeeklyProfit + day.DailyProfit;
-                if(maxDailyProfit < day.DailyProfit)
+                if (maxDailyProfit < day.DailyProfit)
                 {
                     maxDailyProfit = day.DailyProfit;
                 }
@@ -117,7 +105,8 @@ namespace LemonadeStand
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine("------        1- View Leaderboard          ------");
             Console.WriteLine("------        2- Continue Playing          ------");
-            Console.WriteLine("------        3- Return to Main Menu       ------");
+            Console.WriteLine("------        3- Save Game                 ------");
+            Console.WriteLine("------        4- Return to Main Menu       ------");
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine();
             ContinueChoice(Console.ReadLine());
@@ -143,6 +132,11 @@ namespace LemonadeStand
                     GetWeek(number);
                     break;
                 case "3":
+                    SaveGame(GetSaveGameName());
+                    DisplayContinueMenu();
+                    break;
+
+                case "4":
                     UserInterface.GetMainMenu();
                     break;
                 default:
@@ -160,13 +154,24 @@ namespace LemonadeStand
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine();
         }
-        private void LoadGame()//
+        private void LoadGame(int saveID)
         {
-            Connection.Load(saveName);
+            Connection.Load(saveID);
         }
-        private void SaveGame()//
+        private void SaveGame(string saveName)
         {
-            Connection.SaveEndOfWeek("save1", player.name, player.Balance, player.inventory.lemons.stock, player.inventory.lemons.unitProportion, player.inventory.sugar.stock, player.inventory.sugar.unitProportion, Convert.ToInt32(player.inventory.iceCubes.stock), player.inventory.iceCubes.unitProportion, Convert.ToInt32(player.inventory.cups.stock));
+            Connection.SaveEndOfWeek(saveName, player.name, player.Balance, player.inventory.lemons.stock, player.inventory.lemons.unitProportion, player.inventory.sugar.stock, player.inventory.sugar.unitProportion, Convert.ToInt32(player.inventory.iceCubes.stock), player.inventory.iceCubes.unitProportion, Convert.ToInt32(player.inventory.cups.stock));
+        }
+        private string GetSaveGameName()
+        {
+            Console.Write("Name your save game: ");
+            string name = Console.ReadLine();
+            if (string.IsNullOrEmpty(name))
+            {
+                Console.WriteLine("You must name your save game.");
+                GetSaveGameName();
+            }
+            return name;
         }
     }
 }

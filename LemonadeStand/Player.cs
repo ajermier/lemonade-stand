@@ -25,8 +25,24 @@ namespace LemonadeStand
             inventory = new Inventory();
             inventory.AddInitialInventory();
             recipe = new Recipe(inventory);
+        }
+        public Player(int saveID)
+        {
+            Connection.Load(saveID);
+            name = Connection.playerName;
+            balance = Connection.balance;
 
-            //name = getName();
+            inventory = new Inventory();
+            inventory.AddInitialInventory();
+            recipe = new Recipe(inventory);
+
+            inventory.lemons.stock = Connection.lemonStock;
+            inventory.lemons.unitProportion = Connection.lemonProp;
+            inventory.sugar.stock = Connection.sugarStock;
+            inventory.sugar.unitProportion = Connection.sugarProp;
+            inventory.iceCubes.stock = Connection.iceStock;
+            inventory.iceCubes.unitProportion = Connection.iceProp;
+            inventory.cups.stock = Connection.cupStock;
         }
 
         //methods

@@ -16,6 +16,10 @@ namespace LemonadeStand
         public static List<double> highWeeklyProfit;
         public static List<double> highDailyProfit;
 
+        public static List<string> saveNames;
+        public static List<string> saveDates;
+        public static List<int> saveIDs;
+
         public static string saveName;
         public static string playerName;
         public static double balance;
@@ -86,7 +90,7 @@ namespace LemonadeStand
                 connect = new SqlConnection();
                 connect.ConnectionString = "Data Source=AJLAPTOP;Initial Catalog=LemonadeStand;Integrated Security=True";
                 connect.Open();
-                SqlCommand command = new SqlCommand($"INSERT INTO SavedGames (saveName,playerName,balance,lemonStock,lemonProp,sugarStock,sugarProp,iceStock,iceProp,cupStock) VALUES('{saveName}', '{playerName}', {balance}, {lemonStock}, {lemonProp}, {sugarStock}, {sugarProp}, {iceStock}, {iceProp}, {cupStock});", connect);
+                SqlCommand command = new SqlCommand($"INSERT INTO SavedGames (saveName,playerName,balance,lemonStock,lemonProp,sugarStock,sugarProp,iceStock,iceProp,cupStock,saveDate) VALUES('{saveName}', '{playerName}', {balance}, {lemonStock}, {lemonProp}, {sugarStock}, {sugarProp}, {iceStock}, {iceProp}, {cupStock}, GETDATE());", connect);
                 command.ExecuteNonQuery();
                 Console.WriteLine("Saving Game...");
             }
@@ -99,14 +103,42 @@ namespace LemonadeStand
                 connect.Close();
             }
         }
-        public static void Load(string saveName)
+        public static void GetSavedGames()
+        {
+            saveNames = new List<string>();
+            saveIDs = new List<int>();
+            saveDates = new List<string>();
+            try
+            {
+                connect = new SqlConnection();
+                connect.ConnectionString = "Data Source=AJLAPTOP;Initial Catalog=LemonadeStand;Integrated Security=True";
+                connect.Open();
+                SqlCommand command = new SqlCommand("SELECT saveName, saveDate, saveID FROM SavedGames;", connect);
+                SqlDataReader read = command.ExecuteReader();
+                while (read.Read())
+                {
+                    saveNames.Add(read["saveName"].ToString());
+                    saveIDs.Add(Convert.ToInt32(read["saveID"]));
+                    saveDates.Add(read["saveDate"].ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong while loading:" + e.Message);
+            }
+            finally
+            {
+                connect.Close();
+            }
+        }
+        public static void Load(int saveID)
         {
             try
             {
                 connect = new SqlConnection();
                 connect.ConnectionString = "Data Source=AJLAPTOP;Initial Catalog=LemonadeStand;Integrated Security=True";
                 connect.Open();
-                SqlCommand command = new SqlCommand($"SELECT playerName,balance,lemonStock,lemonProp,sugarStock,sugarProp,iceStock,iceProp,cupStock FROM SavedGames WHERE saveName = '{saveName}');", connect);
+                SqlCommand command = new SqlCommand($"SELECT playerName,balance,lemonStock,lemonProp,sugarStock,sugarProp,iceStock,iceProp,cupStock FROM SavedGames WHERE saveID = {saveID};", connect);
                 SqlDataReader read = command.ExecuteReader();
                 while (read.Read())
                 {
@@ -123,7 +155,7 @@ namespace LemonadeStand
             }
             catch (Exception e)
             {
-                Console.WriteLine("Something went wrong while loading:" + e.Message);
+                Console.WriteLine("Something went wrong while loading, check save game ID:" + e.Message);
             }
             finally
             {

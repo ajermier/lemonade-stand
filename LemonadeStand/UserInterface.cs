@@ -45,7 +45,8 @@ namespace LemonadeStand
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine("------        1- View Leaderboard          ------");
             Console.WriteLine("------        2- Start New Game            ------");
-            Console.WriteLine("------        3- Quit                      ------");
+            Console.WriteLine("------        3- Load Game                 ------");
+            Console.WriteLine("------        4- Quit                      ------");
             Console.WriteLine("-------------------------------------------------");
             MainMenuChoice(Console.ReadLine());
         }
@@ -66,6 +67,14 @@ namespace LemonadeStand
                     new Game();
                     break;
                 case "3":
+                    Console.Clear();
+                    Connection.GetSavedGames();
+                    DisplayTitle();
+                    Console.WriteLine();
+                    DisplaySavedGames(Connection.saveNames, Connection.saveDates, Connection.saveIDs);
+                    GetGame(GetLoadGameChoice(Connection.saveIDs));
+                    break;
+                case "4":
                     break;
                 default:
                     Console.WriteLine();
@@ -157,6 +166,58 @@ namespace LemonadeStand
         public static string TruncateString(string myString, int maxLength)
         {
             return myString.Length <= maxLength ? myString : myString.Substring(0, 8);
+        }
+        public static void DisplaySavedGames(List<string> saveNames, List<string> saveDates, List<int> saveIDs)
+        {
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("------             Saved Games             ------");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("-      NAME      DATE                    ID     -");
+            Console.WriteLine("-   -----------------------------------------   -");
+            for (int i = 0; i < saveNames.Count; i++)
+            {
+                Console.WriteLine("- " + (i + 1).ToString("00") + "." + "  " + TruncateString(saveNames[i], 8).PadRight(8) + "  " + (saveDates[i]).PadRight(22) + "  " + (saveIDs[i]) + "  " + " -");
+            }
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------");
+        }
+        public static int GetLoadGameChoice(List <int> saveIDs)
+        {
+            int choice;
+            Console.Write("Enter ID of the save game you would like to load: ");
+            while(!int.TryParse(Console.ReadLine(), out choice))
+            {
+                Console.Write("Enter SaveID number only: ");
+            }
+
+            bool exists = false;
+            for (int i = 0; i < saveIDs.Count; i++)
+            {
+                if (choice == saveIDs[i])
+                {
+                    exists = true;
+                }
+            }
+            if (exists == true)
+            {
+                return choice;
+            }
+            else
+            {
+                Console.WriteLine("Game ID number does not exists. Please try again.");
+                Console.WriteLine();
+                Console.Write("Press enter to return to Main Menu.");
+                Console.ReadKey();
+                Console.Clear();
+                GetMainMenu();
+            }
+            return choice;
+        }
+        public static void GetGame(int choice)
+        {
+            new Game(choice);
         }
     }
 }
